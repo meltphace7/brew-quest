@@ -1,0 +1,259 @@
+:root {
+  --color-primary: white;
+  --color-secondary: rgb(245, 243, 243);
+  --color-tertiary: rgb(245, 70, 7);
+  --color-print: rgb(31, 31, 31);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+li {
+  list-style: none;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+body {
+  background: linear-gradient(
+    40deg,
+    rgba(131, 58, 180, 1) 0%,
+    rgba(253, 29, 29, 1) 50%,
+    rgba(252, 176, 69, 1) 100%
+  );
+  padding: 3.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.application {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--color-secondary);
+  border-radius: 20px;
+}
+
+/*__________ NAV ______________*/
+.nav {
+  width: 100%;
+  height: 7rem;
+  background-color: var(--color-secondary);
+  color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  margin-left: 0.25rem;
+  color: var(--color-print);
+}
+
+.beer-icon {
+  padding: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  background: rgb(251, 251, 96);
+  background: radial-gradient(
+    circle,
+    rgba(251, 251, 96, 1) 0%,
+    rgba(231, 21, 21, 1) 91%
+  );
+  color: white;
+  border-radius: 50%;
+}
+
+.brew-search-field {
+  width: 16rem;
+  height: 3rem;
+  padding-left: 0.5rem;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  border-radius: 20px;
+  border: none;
+}
+
+.find-brewery-btn {
+  width: 10rem;
+  height: 2.5rem;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 20px;
+  background: rgb(255, 36, 36);
+  background: linear-gradient(
+    309deg,
+    rgba(255, 36, 36, 1) 2%,
+    rgba(252, 231, 6, 1) 94%
+  );
+  color: white;
+  transition: 0.25s ease-in-out;
+}
+
+.favorites-btn {
+  width: 8rem;
+  height: 2.5rem;
+  font-size: 1.2rem;
+  border-radius: 20px;
+  border: none;
+  background: rgb(255, 36, 36);
+  background: linear-gradient(
+    309deg,
+    rgba(255, 36, 36, 1) 2%,
+    rgba(252, 231, 6, 1) 94%
+  );
+  color: white;
+  transition: 0.25s ease-in-out;
+}
+
+.nav-btn:hover {
+  background-color: rgb(56, 34, 65);
+  color: white;
+  border: 1px solid white;
+}
+
+/*__________ BREWERY - LIST ______________*/
+
+.brewery-display {
+  width: 100%;
+  height: 50rem;
+  background-color: grey;
+  display: flex;
+}
+
+.breweries {
+  width: 35%;
+  height: 50rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 0.3rem solid var(--color-secondary);
+  background-color: var(--color-primary);
+}
+
+.brewery-list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brewery-li {
+  width: 100%;
+  height: 4rem;
+  margin-bottom: 0.2rem;
+  border: 1px solid white;
+  display: flex;
+  align-items: center;
+}
+
+.brewery-link {
+  width: 100%;
+  height: 5rem;
+  background-color: var(--color-primary);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  color: white;
+  transition: 0.3s ease-out;
+}
+
+.brewery-link-title {
+  color: var(--color-tertiary);
+  font-size: 1.2rem;
+}
+
+.brewery-link-town {
+  color: var(--color-print);
+}
+
+.brewery-link:hover {
+  background-color: var(--color-secondary);
+}
+
+.page-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-btn {
+  padding: 0.5rem;
+  border: none;
+  color: var(--color-tertiary);
+  background-color: var(--color-secondary);
+  border-radius: 20px;
+}
+
+/*__________ BREWERY-FEATURE-BOX ______________*/
+
+.brewery-feature {
+  width: 65%;
+  background-color: var(--color-primary);
+}
+
+.brewery {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brewery-header {
+  width: 100%;
+  background-color: var(--color-primary);
+  height: 15rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.brewery-feature-title {
+  font-size: 2.5rem;
+  padding: 0 3rem;
+  color: var(--color-tertiary);
+}
+
+.brewery-feature-location {
+  font-size: 1.4rem;
+  margin: 1rem;
+}
+
+.brewery-info {
+  width: 100%;
+  height: 10rem;
+  background-color: var(--color-secondary);
+  color: black;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}

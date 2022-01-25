@@ -1,0 +1,15 @@
+{
+  "name": "brewery-app",
+  "version": "1.0.0",
+  "description": "search breweries",
+  "default": "index.html",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "Brock Dallman",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.2.1"
+  }
+}
