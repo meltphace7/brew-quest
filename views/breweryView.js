@@ -2,6 +2,7 @@ import View from "./View.js";
 
 class breweryView extends View {
   _parentElement = document.querySelector(".brewery-feature");
+  _errorMessage = "Search Brewery";
 
   addHandlerRender(handler) {
     ["hashchange", "load"].forEach((ev) =>
@@ -30,11 +31,11 @@ class breweryView extends View {
           : "No phone number<br>available"
       }</p>
       <a class="brewery-feature-website" href="${this._data.website_url}">${
-      this._data.website_url
+      this._data.website_url ? this._data.website_url : "No website available"
     }</a>
-      <p class="brewery-feature-address">${this._data.street}   ${
-      this._data.city
-    }, ${this._data.state}</p>
+      <p class="brewery-feature-address">${
+        this._data.street ? this._data.street : "No street address available"
+      }   ${this._data.city}, ${this._data.state}</p>
     </div>
   </div>
       

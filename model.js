@@ -34,6 +34,7 @@ export const loadSearchResults = async function (query) {
 
 export const getBrewery = async function (id) {
   try {
+    if (id === "") return;
     const res = await fetch(`https://api.openbrewerydb.org/breweries/${id}`);
     const data = await res.json();
     state.brewery = data;

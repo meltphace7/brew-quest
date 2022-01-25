@@ -2,11 +2,11 @@ import * as model from "./model.js";
 import searchView from "./views/searchView.js";
 import resultsView from "./views/resultsView.js";
 import breweryView from "./views/breweryView.js";
+import paginationView from "./views/paginationView.js";
 
 const controlSearchResults = async function () {
   try {
     // 1) Get Search Query
-    console.log(model.state);
     const query = searchView.getQuery();
 
     // 2) LOAD BREWERY LIST DATA
@@ -15,7 +15,8 @@ const controlSearchResults = async function () {
     // 3) Render Brewery List
 
     resultsView.render(model.state.search.results);
-    console.log(model.state.search);
+    paginationView.render(model.state);
+    console.log(model.state.search.results);
   } catch (err) {
     console.log(err);
   }
@@ -37,9 +38,19 @@ const controlBrewery = async function () {
   }
 };
 
+const controlPagination = function (goto) {
+  if (goto === 1) model.state.search.page++;
+  if (goto === -1 && model.state.search.page !== 1) model.state.search.page--;
+  console.log(`page ${model.state.search.page}`);
+  controlSearchResults();
+  console.log("CONTROL PAGINATIOn");
+};
+
 const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   breweryView.addHandlerRender(controlBrewery);
+  paginationView.addHandlerClick(controlPagination);
+  console.log(model.state);
 };
 
 init();
@@ -48,24 +59,9 @@ init();
 
 const prevPage = document.querySelector(".page-btn-prev");
 const nextPage = document.querySelector(".page-btn-next");
+const pagination = document.querySelector(".pagination");
 const findBreweryBtn = document.querySelector(".find-brewery-btn");
 
 findBreweryBtn.addEventListener("click", function (e) {
   model.state.search.page = 1;
-});
-
-nextPage.addEventListener("click", function (e) {
-  model.state.search.page++;
-  console.log(model.state.search.page);
-  controlSearchResults();
-
-  console.log("click");
-});
-
-prevPage.addEventListener("click", function (e) {
-  model.state.search.page--;
-  console.log(model.state.search.page);
-  controlSearchResults();
-
-  console.log("click");
 });

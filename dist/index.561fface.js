@@ -527,16 +527,18 @@ var _resultsViewJs = require("./views/resultsView.js");
 var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
 var _breweryViewJs = require("./views/breweryView.js");
 var _breweryViewJsDefault = parcelHelpers.interopDefault(_breweryViewJs);
+var _paginationViewJs = require("./views/paginationView.js");
+var _paginationViewJsDefault = parcelHelpers.interopDefault(_paginationViewJs);
 const controlSearchResults = async function() {
     try {
         // 1) Get Search Query
-        console.log(_modelJs.state);
         const query = _searchViewJsDefault.default.getQuery();
         // 2) LOAD BREWERY LIST DATA
         await _modelJs.loadSearchResults(query);
         // 3) Render Brewery List
         _resultsViewJsDefault.default.render(_modelJs.state.search.results);
-        console.log(_modelJs.state.search);
+        _paginationViewJsDefault.default.render(_modelJs.state);
+        console.log(_modelJs.state.search.results);
     } catch (err) {
         console.log(err);
     }
@@ -553,32 +555,30 @@ const controlBrewery = async function() {
         console.log(err);
     }
 };
+const controlPagination = function(goto) {
+    if (goto === 1) _modelJs.state.search.page++;
+    if (goto === -1 && _modelJs.state.search.page !== 1) _modelJs.state.search.page--;
+    console.log(`page ${_modelJs.state.search.page}`);
+    controlSearchResults();
+    console.log("CONTROL PAGINATIOn");
+};
 const init = function() {
     _searchViewJsDefault.default.addHandlerSearch(controlSearchResults);
     _breweryViewJsDefault.default.addHandlerRender(controlBrewery);
+    _paginationViewJsDefault.default.addHandlerClick(controlPagination);
+    console.log(_modelJs.state);
 };
 init();
 // PAGINATION
 const prevPage = document.querySelector(".page-btn-prev");
 const nextPage = document.querySelector(".page-btn-next");
+const pagination = document.querySelector(".pagination");
 const findBreweryBtn = document.querySelector(".find-brewery-btn");
 findBreweryBtn.addEventListener("click", function(e) {
     _modelJs.state.search.page = 1;
 });
-nextPage.addEventListener("click", function(e) {
-    _modelJs.state.search.page++;
-    console.log(_modelJs.state.search.page);
-    controlSearchResults();
-    console.log("click");
-});
-prevPage.addEventListener("click", function(e) {
-    _modelJs.state.search.page--;
-    console.log(_modelJs.state.search.page);
-    controlSearchResults();
-    console.log("click");
-});
 
-},{"./model.js":"4mRaZ","./views/searchView.js":"lkROr","./views/resultsView.js":"64qcw","./views/breweryView.js":"iYyii","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mRaZ":[function(require,module,exports) {
+},{"./model.js":"4mRaZ","./views/searchView.js":"lkROr","./views/resultsView.js":"64qcw","./views/breweryView.js":"iYyii","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./views/paginationView.js":"0ne27"}],"4mRaZ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state
@@ -619,6 +619,7 @@ const loadSearchResults = async function(query) {
 };
 const getBrewery = async function(id) {
     try {
+        if (id === "") return;
         const res = await fetch(`https://api.openbrewerydb.org/breweries/${id}`);
         const data = await res.json();
         state.brewery = data;
@@ -686,6 +687,7 @@ var _viewJs = require("./View.js");
 var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
 class ResultsView extends _viewJsDefault.default {
     _parentElement = document.querySelector(".brewery-list");
+    _errorMessage = "No Breweries found, please try again!";
     _generateMarkup() {
         const markup = this._data.map(this._generateMarkupPreview).join("");
         return markup;
@@ -708,9 +710,23 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 class View {
     _data;
+    _message;
+    _errorMessage;
     render(data) {
+        if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
         this._data = data;
         const markup = this._generateMarkup();
+        this._clear();
+        this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    renderError(message = this._errorMessage) {
+        const markup = `
+      <div class="error">
+      <div>
+      </div>
+      <p>${message}</p>
+      </div>
+      `;
         this._clear();
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
     }
@@ -727,6 +743,7 @@ var _viewJs = require("./View.js");
 var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
 class breweryView extends _viewJsDefault.default {
     _parentElement = document.querySelector(".brewery-feature");
+    _errorMessage = "Search Brewery";
     addHandlerRender(handler) {
         [
             "hashchange",
@@ -744,8 +761,8 @@ class breweryView extends _viewJsDefault.default {
     </div>
     <div class="brewery-info">
       <p class="brewery-feature-phone">${this._data.phone ? this._data.phone.slice(0, 3) + "-" + this._data.phone.slice(3, 6) + "-" + this._data.phone.slice(-4) : "No phone number<br>available"}</p>
-      <a class="brewery-feature-website" href="${this._data.website_url}">${this._data.website_url}</a>
-      <p class="brewery-feature-address">${this._data.street}   ${this._data.city}, ${this._data.state}</p>
+      <a class="brewery-feature-website" href="${this._data.website_url}">${this._data.website_url ? this._data.website_url : "No website available"}</a>
+      <p class="brewery-feature-address">${this._data.street ? this._data.street : "No street address available"}   ${this._data.city}, ${this._data.state}</p>
     </div>
   </div>
       
@@ -753,6 +770,47 @@ class breweryView extends _viewJsDefault.default {
     }
 }
 exports.default = new breweryView();
+
+},{"./View.js":"hsIKO","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"0ne27":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./View.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class paginationView extends _viewJsDefault.default {
+    _parentElement = document.querySelector(".pagination");
+    addHandlerClick(handler) {
+        this._parentElement.addEventListener("click", function(e) {
+            const btn = e.target.closest(".page-btn");
+            if (!btn) return;
+            console.log("PAGE BTN");
+            const goTo = +btn.dataset.goto;
+            console.log(goTo);
+            handler(goTo);
+        });
+    }
+    _generateMarkup() {
+        const results = this._data.search.results.length;
+        const page = this._data.search.page;
+        console.log(page);
+        // If there are more than one pages and on first page
+        if (results === 10 && page === 1) return `
+      <button data-goto="1" class="page-btn page-btn-next">Next Page</button>
+      `;
+        // If there are more than 2 pages and on a middle page
+        if (results === 10 && page > 1) return `
+      <button data-goto="-1" class="page-btn page-btn-prev">Prev Page</button>
+      <button data-goto="1" class="page-btn page-btn-next">Next Page</button>
+      
+      `;
+        // If there are more than one Pages and on LAST PAGE
+        if (results <= 10 && page > 1) return `
+      <button data-goto="-1" class="page-btn page-btn-prev">Prev Page</button>
+      `;
+        // If there are is only 1 page
+        if (results < 10 && page === 1) return "";
+    }
+}
+exports.default = new paginationView();
 
 },{"./View.js":"hsIKO","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["78FsW","a2PJv"], "a2PJv", "parcelRequire47cd")
 

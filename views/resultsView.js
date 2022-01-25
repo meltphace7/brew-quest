@@ -2,6 +2,7 @@ import View from "./View.js";
 
 class ResultsView extends View {
   _parentElement = document.querySelector(".brewery-list");
+  _errorMessage = "No Breweries found, please try again!";
 
   _generateMarkup() {
     const markup = this._data.map(this._generateMarkupPreview).join("");
