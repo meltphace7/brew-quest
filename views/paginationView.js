@@ -23,15 +23,20 @@ class paginationView extends View {
     // If there are more than one pages and on first page
     if (results === 10 && page === 1) {
       return `
-      <button data-goto="1" class="page-btn page-btn-next">Next Page</button>
+      <button data-goto="1" class="page-btn page-btn-next">
+      Page ${page + 1}</button>
       `;
     }
 
     // If there are more than 2 pages and on a middle page
     if (results === 10 && page > 1) {
       return `
-      <button data-goto="-1" class="page-btn page-btn-prev">Prev Page</button>
-      <button data-goto="1" class="page-btn page-btn-next">Next Page</button>
+      <button data-goto="-1" class="page-btn page-btn-prev">Page ${
+        page - 1
+      }</button>
+      <button data-goto="1" class="page-btn page-btn-next">Page ${
+        page + 1
+      }</button>
       
       `;
     }
@@ -39,7 +44,9 @@ class paginationView extends View {
     // If there are more than one Pages and on LAST PAGE
     if (results <= 10 && page > 1) {
       return `
-      <button data-goto="-1" class="page-btn page-btn-prev">Prev Page</button>
+      <button data-goto="-1" class="page-btn page-btn-prev">Page ${
+        page - 1
+      }</button>
       `;
     }
 

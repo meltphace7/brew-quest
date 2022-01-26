@@ -54,14 +54,3 @@ const init = function () {
 };
 
 init();
-
-// PAGINATION
-
-const prevPage = document.querySelector(".page-btn-prev");
-const nextPage = document.querySelector(".page-btn-next");
-const pagination = document.querySelector(".pagination");
-const findBreweryBtn = document.querySelector(".find-brewery-btn");
-
-findBreweryBtn.addEventListener("click", function (e) {
-  model.state.search.page = 1;
-});

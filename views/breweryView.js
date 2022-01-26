@@ -33,9 +33,17 @@ class breweryView extends View {
       <a class="brewery-feature-website" href="${this._data.website_url}">${
       this._data.website_url ? this._data.website_url : "No website available"
     }</a>
+      <div class="location-container">
       <p class="brewery-feature-address">${
         this._data.street ? this._data.street : "No street address available"
       }   ${this._data.city}, ${this._data.state}</p>
+      <p class="brewery-feature-address">${
+        this._data.address_2 ? this._data.address_2 : ""
+      }  </p>
+      <p class="brewery-feature-address">${
+        this._data.address_3 ? this._data.address_3 : ""
+      }</p>
+      </div>
     </div>
   </div>
       

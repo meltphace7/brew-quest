@@ -569,16 +569,8 @@ const init = function() {
     console.log(_modelJs.state);
 };
 init();
-// PAGINATION
-const prevPage = document.querySelector(".page-btn-prev");
-const nextPage = document.querySelector(".page-btn-next");
-const pagination = document.querySelector(".pagination");
-const findBreweryBtn = document.querySelector(".find-brewery-btn");
-findBreweryBtn.addEventListener("click", function(e) {
-    _modelJs.state.search.page = 1;
-});
 
-},{"./model.js":"4mRaZ","./views/searchView.js":"lkROr","./views/resultsView.js":"64qcw","./views/breweryView.js":"iYyii","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./views/paginationView.js":"0ne27"}],"4mRaZ":[function(require,module,exports) {
+},{"./model.js":"4mRaZ","./views/searchView.js":"lkROr","./views/resultsView.js":"64qcw","./views/breweryView.js":"iYyii","./views/paginationView.js":"0ne27","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mRaZ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state
@@ -762,7 +754,11 @@ class breweryView extends _viewJsDefault.default {
     <div class="brewery-info">
       <p class="brewery-feature-phone">${this._data.phone ? this._data.phone.slice(0, 3) + "-" + this._data.phone.slice(3, 6) + "-" + this._data.phone.slice(-4) : "No phone number<br>available"}</p>
       <a class="brewery-feature-website" href="${this._data.website_url}">${this._data.website_url ? this._data.website_url : "No website available"}</a>
+      <div class="location-container">
       <p class="brewery-feature-address">${this._data.street ? this._data.street : "No street address available"}   ${this._data.city}, ${this._data.state}</p>
+      <p class="brewery-feature-address">${this._data.address_2 ? this._data.address_2 : ""}  </p>
+      <p class="brewery-feature-address">${this._data.address_3 ? this._data.address_3 : ""}</p>
+      </div>
     </div>
   </div>
       
@@ -794,17 +790,18 @@ class paginationView extends _viewJsDefault.default {
         console.log(page);
         // If there are more than one pages and on first page
         if (results === 10 && page === 1) return `
-      <button data-goto="1" class="page-btn page-btn-next">Next Page</button>
+      <button data-goto="1" class="page-btn page-btn-next">
+      Page ${page + 1}</button>
       `;
         // If there are more than 2 pages and on a middle page
         if (results === 10 && page > 1) return `
-      <button data-goto="-1" class="page-btn page-btn-prev">Prev Page</button>
-      <button data-goto="1" class="page-btn page-btn-next">Next Page</button>
+      <button data-goto="-1" class="page-btn page-btn-prev">Page ${page - 1}</button>
+      <button data-goto="1" class="page-btn page-btn-next">Page ${page + 1}</button>
       
       `;
         // If there are more than one Pages and on LAST PAGE
         if (results <= 10 && page > 1) return `
-      <button data-goto="-1" class="page-btn page-btn-prev">Prev Page</button>
+      <button data-goto="-1" class="page-btn page-btn-prev">Page ${page - 1}</button>
       `;
         // If there are is only 1 page
         if (results < 10 && page === 1) return "";
