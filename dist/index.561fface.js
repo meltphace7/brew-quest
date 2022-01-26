@@ -570,7 +570,7 @@ const init = function() {
 };
 init();
 
-},{"./model.js":"4mRaZ","./views/searchView.js":"lkROr","./views/resultsView.js":"64qcw","./views/breweryView.js":"iYyii","./views/paginationView.js":"0ne27","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mRaZ":[function(require,module,exports) {
+},{"./model.js":"4mRaZ","./views/searchView.js":"lkROr","./views/resultsView.js":"64qcw","./views/breweryView.js":"iYyii","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./views/paginationView.js":"0ne27"}],"4mRaZ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state
@@ -615,6 +615,7 @@ const getBrewery = async function(id) {
         const res = await fetch(`https://api.openbrewerydb.org/breweries/${id}`);
         const data = await res.json();
         state.brewery = data;
+        console.log(data);
     } catch (err) {
         console.log(err);
     }

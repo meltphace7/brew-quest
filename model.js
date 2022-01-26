@@ -38,6 +38,7 @@ export const getBrewery = async function (id) {
     const res = await fetch(`https://api.openbrewerydb.org/breweries/${id}`);
     const data = await res.json();
     state.brewery = data;
+    console.log(data);
   } catch (err) {
     console.log(err);
   }
