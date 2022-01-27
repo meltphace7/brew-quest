@@ -100,7 +100,9 @@ body {
   border: none;
 }
 
-.nav-btn {
+.find-brewery-btn {
+  background-color: var(--color-tertiary);
+  color: white;
   width: 10rem;
   height: 2.5rem;
   font-size: 1.2rem;
@@ -108,23 +110,38 @@ body {
   border: none;
   border-radius: 20px;
   border: 2px solid var(--color-print);
-  color: var(--color-print);
-  background-color: white;
+  color: white;
+  background-color: var(--color-tertiary);
   transition: 0.25s ease-in-out;
 }
 
-.find-brewery-btn {
-  background-color: var(--color-tertiary);
-}
-
-.favorites-btn {
-  margin-right: 0.7rem;
-}
-
-.nav-btn:hover {
+.find-brewery-btn:hover {
   background-color: var(--color-print);
   color: white;
   border: 1px solid white;
+}
+
+.favorites-btn {
+  font-size: 1.5rem;
+  position: relative;
+  margin-right: 0.7rem;
+  color: var(--color-tertiary);
+  padding: 2.5rem 1rem 2.5rem 3rem;
+}
+
+.favorites-list {
+  position: absolute;
+  display: none;
+  z-index: 999;
+  top: 10rem;
+  right: 4rem;
+  width: 25rem;
+  background-color: var(--color-primary);
+  overflow: hidden;
+}
+
+.favorites-container:hover .favorites-list {
+  display: block;
 }
 
 /*__________ BREWERY - LIST ______________*/
@@ -213,7 +230,7 @@ body {
 
 /*__________ BREWERY-FEATURE-BOX ______________*/
 
-.start-message {
+.error {
   text-align: center;
   margin-top: 3rem;
   font-size: 1.2rem;
@@ -222,7 +239,7 @@ body {
 
 .brewery-feature {
   width: 65%;
-  background-color: var(--color-primary);
+  background-color: var(--color-secondary);
 }
 
 .brewery {
@@ -235,7 +252,6 @@ body {
 .brewery-header {
   width: 100%;
   background-color: var(--color-primary);
-  height: 15rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -253,14 +269,32 @@ body {
   margin: 1rem;
 }
 
+.add-to-favorites {
+  padding: 0.2rem;
+  margin: 1rem;
+  background-color: var(--color-primary);
+  color: var(--color-tertiary);
+  border: none;
+  float: right;
+}
+
 .brewery-info {
   width: 100%;
-  height: 10rem;
+  padding: 1rem 0rem;
   background-color: var(--color-secondary);
   color: black;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
   align-items: center;
+}
+
+.brewery-info-item {
+  margin-bottom: 1rem;
+}
+
+.brewery-data-text {
+  color: var(--color-tertiary);
 }
 
 /*# sourceMappingURL=index.3ccf6c56.css.map */

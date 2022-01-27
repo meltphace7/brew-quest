@@ -3,6 +3,7 @@ import searchView from "./views/searchView.js";
 import resultsView from "./views/resultsView.js";
 import breweryView from "./views/breweryView.js";
 import paginationView from "./views/paginationView.js";
+import favoritesView from "./views/favoritesView.js";
 
 const controlSearchResults = async function () {
   try {
@@ -16,7 +17,7 @@ const controlSearchResults = async function () {
 
     resultsView.render(model.state.search.results);
     paginationView.render(model.state);
-    console.log(model.state.search.results);
+    favoritesView.render(model.state.favorites);
   } catch (err) {
     console.log(err);
   }
@@ -41,16 +42,24 @@ const controlBrewery = async function () {
 const controlPagination = function (goto) {
   if (goto === 1) model.state.search.page++;
   if (goto === -1 && model.state.search.page !== 1) model.state.search.page--;
-  console.log(`page ${model.state.search.page}`);
   controlSearchResults();
-  console.log("CONTROL PAGINATIOn");
+};
+
+const controlAddToFavorites = function () {
+  if (!model.state.brewery.favorite) model.addToFavorites(model.state.brewery);
+  else model.removeFromFavorites(model.state.brewery.id);
+  // else model.removeFromFavorites(model.state.brewery.id);
+  breweryView.render(model.state.brewery);
+  favoritesView.render(model.state.favorites);
 };
 
 const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   breweryView.addHandlerRender(controlBrewery);
   paginationView.addHandlerClick(controlPagination);
-  console.log(model.state);
+  breweryView.addHandlerFavorites(controlAddToFavorites);
+  favoritesView.render(model.state.favorites);
 };
 
 init();
+console.log(model.state);

@@ -4,7 +4,11 @@ export default class View {
   _errorMessage;
 
   render(data) {
-    if (!data || (Array.isArray(data) && data.length === 0))
+    if (
+      !data ||
+      (Array.isArray(data) && data.length === 0) ||
+      Object.keys(data).length === 0
+    )
       return this.renderError();
 
     this._data = data;

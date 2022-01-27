@@ -529,6 +529,8 @@ var _breweryViewJs = require("./views/breweryView.js");
 var _breweryViewJsDefault = parcelHelpers.interopDefault(_breweryViewJs);
 var _paginationViewJs = require("./views/paginationView.js");
 var _paginationViewJsDefault = parcelHelpers.interopDefault(_paginationViewJs);
+var _favoritesViewJs = require("./views/favoritesView.js");
+var _favoritesViewJsDefault = parcelHelpers.interopDefault(_favoritesViewJs);
 const controlSearchResults = async function() {
     try {
         // 1) Get Search Query
@@ -538,7 +540,7 @@ const controlSearchResults = async function() {
         // 3) Render Brewery List
         _resultsViewJsDefault.default.render(_modelJs.state.search.results);
         _paginationViewJsDefault.default.render(_modelJs.state);
-        console.log(_modelJs.state.search.results);
+        _favoritesViewJsDefault.default.render(_modelJs.state.favorites);
     } catch (err) {
         console.log(err);
     }
@@ -558,19 +560,26 @@ const controlBrewery = async function() {
 const controlPagination = function(goto) {
     if (goto === 1) _modelJs.state.search.page++;
     if (goto === -1 && _modelJs.state.search.page !== 1) _modelJs.state.search.page--;
-    console.log(`page ${_modelJs.state.search.page}`);
     controlSearchResults();
-    console.log("CONTROL PAGINATIOn");
+};
+const controlAddToFavorites = function() {
+    if (!_modelJs.state.brewery.favorite) _modelJs.addToFavorites(_modelJs.state.brewery);
+    else _modelJs.removeFromFavorites(_modelJs.state.brewery.id);
+    // else model.removeFromFavorites(model.state.brewery.id);
+    _breweryViewJsDefault.default.render(_modelJs.state.brewery);
+    _favoritesViewJsDefault.default.render(_modelJs.state.favorites);
 };
 const init = function() {
     _searchViewJsDefault.default.addHandlerSearch(controlSearchResults);
     _breweryViewJsDefault.default.addHandlerRender(controlBrewery);
     _paginationViewJsDefault.default.addHandlerClick(controlPagination);
-    console.log(_modelJs.state);
+    _breweryViewJsDefault.default.addHandlerFavorites(controlAddToFavorites);
+    _favoritesViewJsDefault.default.render(_modelJs.state.favorites);
 };
 init();
+console.log(_modelJs.state);
 
-},{"./model.js":"4mRaZ","./views/searchView.js":"lkROr","./views/resultsView.js":"64qcw","./views/breweryView.js":"iYyii","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./views/paginationView.js":"0ne27"}],"4mRaZ":[function(require,module,exports) {
+},{"./model.js":"4mRaZ","./views/searchView.js":"lkROr","./views/resultsView.js":"64qcw","./views/breweryView.js":"iYyii","./views/paginationView.js":"0ne27","./views/favoritesView.js":"hfWxd","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4mRaZ":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state
@@ -578,6 +587,10 @@ parcelHelpers.export(exports, "state", ()=>state
 parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults
 );
 parcelHelpers.export(exports, "getBrewery", ()=>getBrewery
+);
+parcelHelpers.export(exports, "addToFavorites", ()=>addToFavorites
+);
+parcelHelpers.export(exports, "removeFromFavorites", ()=>removeFromFavorites
 );
 const state = {
     brewery: {
@@ -587,14 +600,28 @@ const state = {
         results: [],
         page: 1,
         resultsPerPage: 10
-    }
+    },
+    favorites: []
+};
+// FORMATS DATA to be used in INDIVIDUAL BREWERY RENDER
+const createBreweryObject = function(data) {
+    return {
+        id: data.id,
+        name: data.name,
+        city: data.city,
+        state: data.state,
+        phone: data.phone,
+        street: data.street,
+        website: data.website_url,
+        breweryType: data.brewery_type,
+        postalCode: data.postal_code
+    };
 };
 const loadSearchResults = async function(query) {
     try {
         state.search.query = query;
         const page = state.search.page;
         const perPage = state.search.resultsPerPage;
-        console.log();
         const res = await fetch(`https://api.openbrewerydb.org/breweries?by_city=${query}&per_page=${perPage}&page=${page}`);
         const data = await res.json();
         state.search.results = data.map((brew)=>{
@@ -606,7 +633,7 @@ const loadSearchResults = async function(query) {
             };
         });
     } catch (err) {
-        console.log(err);
+        throw err;
     }
 };
 const getBrewery = async function(id) {
@@ -614,12 +641,34 @@ const getBrewery = async function(id) {
         if (id === "") return;
         const res = await fetch(`https://api.openbrewerydb.org/breweries/${id}`);
         const data = await res.json();
-        state.brewery = data;
-        console.log(data);
+        state.brewery = createBreweryObject(data);
+        if (state.favorites.some((fav)=>fav.id === id
+        )) state.brewery.favorite = true;
+        else state.brewery.favorite = false;
     } catch (err) {
-        console.log(err);
+        throw err;
     }
 };
+const persistFavorites = function() {
+    localStorage.setItem("favorites", JSON.stringify(state.favorites));
+};
+const addToFavorites = function(brewery) {
+    state.favorites.push(brewery);
+    state.brewery.favorite = true;
+    persistFavorites();
+};
+const removeFromFavorites = function(id) {
+    const index = state.favorites.findIndex((el)=>el.id === id
+    );
+    state.favorites.splice(index, 1);
+    if (id === state.brewery.id) state.brewery.favorite = false;
+    persistFavorites();
+};
+const init = function() {
+    const storage = localStorage.getItem("favorites");
+    if (storage) state.favorites = JSON.parse(storage);
+};
+init();
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
@@ -706,7 +755,7 @@ class View {
     _message;
     _errorMessage;
     render(data) {
-        if (!data || Array.isArray(data) && data.length === 0) return this.renderError();
+        if (!data || Array.isArray(data) && data.length === 0 || Object.keys(data).length === 0) return this.renderError();
         this._data = data;
         const markup = this._generateMarkup();
         this._clear();
@@ -736,7 +785,7 @@ var _viewJs = require("./View.js");
 var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
 class breweryView extends _viewJsDefault.default {
     _parentElement = document.querySelector(".brewery-feature");
-    _errorMessage = "Search Brewery";
+    _errorMessage = "Search a city to find Brewery!";
     addHandlerRender(handler) {
         [
             "hashchange",
@@ -744,22 +793,27 @@ class breweryView extends _viewJsDefault.default {
         ].forEach((ev)=>window.addEventListener(ev, handler)
         );
     }
+    addHandlerFavorites(handler) {
+        this._parentElement.addEventListener("click", function(e) {
+            const btn = e.target.closest(".add-to-favorites");
+            if (!btn) return;
+            console.log("FAVE BUTTON");
+            handler();
+        });
+    }
     _generateMarkup() {
         return `
     <div class="brewery">
     <div class="brewery-header">
       <h1 class="brewery-feature-title">${this._data.name}</h1>
       <p class="brewery-feature-location">${this._data.city}, ${this._data.state}</p>
-      <p class="brewery-feature-type">${this._data.brewery_type} brewery</p>
+      <p class="brewery-feature-type">${this._data.breweryType} brewery</p>
+      <button class="add-to-favorites">${this._data.favorite ? "Favorited" : "Add To Favorites"}</button
     </div>
     <div class="brewery-info">
-      <p class="brewery-feature-phone">${this._data.phone ? this._data.phone.slice(0, 3) + "-" + this._data.phone.slice(3, 6) + "-" + this._data.phone.slice(-4) : "No phone number<br>available"}</p>
-      <a class="brewery-feature-website" href="${this._data.website_url}">${this._data.website_url ? this._data.website_url : "No website available"}</a>
-      <div class="location-container">
-      <p class="brewery-feature-address">${this._data.street ? this._data.street : "No street address available"}   ${this._data.city}, ${this._data.state}</p>
-      <p class="brewery-feature-address">${this._data.address_2 ? this._data.address_2 : ""}  </p>
-      <p class="brewery-feature-address">${this._data.address_3 ? this._data.address_3 : ""}</p>
-      </div>
+    <a class="brewery-feature-website brewery-info-item" href="${this._data.website}">${this._data.website ? this._data.website : "No website available"}</a>
+      <p class="brewery-feature-phone brewery-info-item">Phone:<span class="brewery-data-text"> ${this._data.phone ? this._data.phone.slice(0, 3) + "-" + this._data.phone.slice(3, 6) + "-" + this._data.phone.slice(-4) : "No phone number<br>available"}</span></p>
+      <p class="brewery-feature-address brewery-info-item">Address:<span class="brewery-data-text"> ${this._data.street ? this._data.street : "No street address available"}   ${this._data.city}, ${this._data.state}, ${this._data.postalCode ? this._data.postalCode : ""}</span></p>
     </div>
   </div>
       
@@ -809,6 +863,31 @@ class paginationView extends _viewJsDefault.default {
     }
 }
 exports.default = new paginationView();
+
+},{"./View.js":"hsIKO","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hfWxd":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _viewJs = require("./View.js");
+var _viewJsDefault = parcelHelpers.interopDefault(_viewJs);
+class favoritesView extends _viewJsDefault.default {
+    _parentElement = document.querySelector(".favorites-list");
+    _errorMessage = "No Favorites yet!";
+    _generateMarkup() {
+        const markup = this._data.map(this._generateMarkupPreview).join("");
+        return markup;
+    }
+    _generateMarkupPreview(result) {
+        return `
+    <li class="brewery-li">
+    <a class="brewery-link" href="#${result.id}">
+      <h1 class="brewery-link-title">${result.name}</h1>
+      <p class="brewery-link-town">${result.city}, ${result.state}</p>
+    </a>
+  </li>
+    `;
+    }
+}
+exports.default = new favoritesView();
 
 },{"./View.js":"hsIKO","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["78FsW","a2PJv"], "a2PJv", "parcelRequire47cd")
 

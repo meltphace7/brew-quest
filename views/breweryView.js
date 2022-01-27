@@ -2,12 +2,21 @@ import View from "./View.js";
 
 class breweryView extends View {
   _parentElement = document.querySelector(".brewery-feature");
-  _errorMessage = "Search Brewery";
+  _errorMessage = "Search a city to find Brewery!";
 
   addHandlerRender(handler) {
     ["hashchange", "load"].forEach((ev) =>
       window.addEventListener(ev, handler)
     );
+  }
+
+  addHandlerFavorites(handler) {
+    this._parentElement.addEventListener("click", function (e) {
+      const btn = e.target.closest(".add-to-favorites");
+      if (!btn) return;
+      console.log("FAVE BUTTON");
+      handler();
+    });
   }
 
   _generateMarkup() {
@@ -18,10 +27,16 @@ class breweryView extends View {
       <p class="brewery-feature-location">${this._data.city}, ${
       this._data.state
     }</p>
-      <p class="brewery-feature-type">${this._data.brewery_type} brewery</p>
+      <p class="brewery-feature-type">${this._data.breweryType} brewery</p>
+      <button class="add-to-favorites">${
+        this._data.favorite ? "Favorited" : "Add To Favorites"
+      }</button
     </div>
     <div class="brewery-info">
-      <p class="brewery-feature-phone">${
+    <a class="brewery-feature-website brewery-info-item" href="${
+      this._data.website
+    }">${this._data.website ? this._data.website : "No website available"}</a>
+      <p class="brewery-feature-phone brewery-info-item">Phone:<span class="brewery-data-text"> ${
         this._data.phone
           ? this._data.phone.slice(0, 3) +
             "-" +
@@ -29,21 +44,12 @@ class breweryView extends View {
             "-" +
             this._data.phone.slice(-4)
           : "No phone number<br>available"
-      }</p>
-      <a class="brewery-feature-website" href="${this._data.website_url}">${
-      this._data.website_url ? this._data.website_url : "No website available"
-    }</a>
-      <div class="location-container">
-      <p class="brewery-feature-address">${
+      }</span></p>
+      <p class="brewery-feature-address brewery-info-item">Address:<span class="brewery-data-text"> ${
         this._data.street ? this._data.street : "No street address available"
-      }   ${this._data.city}, ${this._data.state}</p>
-      <p class="brewery-feature-address">${
-        this._data.address_2 ? this._data.address_2 : ""
-      }  </p>
-      <p class="brewery-feature-address">${
-        this._data.address_3 ? this._data.address_3 : ""
-      }</p>
-      </div>
+      }   ${this._data.city}, ${this._data.state}, ${
+      this._data.postalCode ? this._data.postalCode : ""
+    }</span></p>
     </div>
   </div>
       
