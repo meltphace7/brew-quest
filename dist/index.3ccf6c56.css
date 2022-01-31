@@ -48,6 +48,14 @@ body {
   align-items: center;
 }
 
+.star-icon {
+  height: 2rem;
+}
+
+.star-favorite-icon {
+  height: 2rem;
+}
+
 .application {
   width: 100%;
   padding: 1rem;
@@ -127,6 +135,11 @@ body {
   margin-right: 0.7rem;
   color: var(--color-tertiary);
   padding: 2.5rem 1rem 2.5rem 3rem;
+  border: none;
+  background-color: var(--color-secondary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .favorites-list {
@@ -226,6 +239,15 @@ body {
   color: var(--color-tertiary);
   background-color: var(--color-secondary);
   border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.arrow-icon {
+  height: 1rem;
+  margin: 0rem 0.5rem;
+  color: var(--color-tertiary);
 }
 
 /*__________ BREWERY-FEATURE-BOX ______________*/
@@ -276,6 +298,9 @@ body {
   color: var(--color-tertiary);
   border: none;
   float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .brewery-info {
@@ -295,6 +320,10 @@ body {
 
 .brewery-data-text {
   color: var(--color-tertiary);
+}
+
+.address-container {
+  display: flex;
 }
 
 /*# sourceMappingURL=index.3ccf6c56.css.map */

@@ -535,6 +535,7 @@ const controlSearchResults = async function() {
     try {
         // 1) Get Search Query
         const query = _searchViewJsDefault.default.getQuery();
+        if (query !== _modelJs.state.search.query) _modelJs.state.search.page = 1;
         // 2) LOAD BREWERY LIST DATA
         await _modelJs.loadSearchResults(query);
         // 3) Render Brewery List
@@ -797,7 +798,6 @@ class breweryView extends _viewJsDefault.default {
         this._parentElement.addEventListener("click", function(e) {
             const btn = e.target.closest(".add-to-favorites");
             if (!btn) return;
-            console.log("FAVE BUTTON");
             handler();
         });
     }
@@ -808,12 +808,17 @@ class breweryView extends _viewJsDefault.default {
       <h1 class="brewery-feature-title">${this._data.name}</h1>
       <p class="brewery-feature-location">${this._data.city}, ${this._data.state}</p>
       <p class="brewery-feature-type">${this._data.breweryType} brewery</p>
-      <button class="add-to-favorites">${this._data.favorite ? "Favorited" : "Add To Favorites"}</button
+      <button class="add-to-favorites">${this._data.favorite ? `
+          <svg xmlns="http://www.w3.org/2000/svg" class="star-favorite-icon" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+        </svg>
+        Favorited` : `  
+          Add To Favorites`}</button
     </div>
     <div class="brewery-info">
     <a class="brewery-feature-website brewery-info-item" href="${this._data.website}">${this._data.website ? this._data.website : "No website available"}</a>
       <p class="brewery-feature-phone brewery-info-item">Phone:<span class="brewery-data-text"> ${this._data.phone ? this._data.phone.slice(0, 3) + "-" + this._data.phone.slice(3, 6) + "-" + this._data.phone.slice(-4) : "No phone number<br>available"}</span></p>
-      <p class="brewery-feature-address brewery-info-item">Address:<span class="brewery-data-text"> ${this._data.street ? this._data.street : "No street address available"}   ${this._data.city}, ${this._data.state}, ${this._data.postalCode ? this._data.postalCode : ""}</span></p>
+        <p class="brewery-feature-address brewery-info-item"> Address: <span class="brewery-data-text">  ${this._data.street ? this._data.street : "No street address available"}   ${this._data.city}, ${this._data.state}, ${this._data.postalCode ? this._data.postalCode : ""}</span></p>
     </div>
   </div>
       
@@ -833,7 +838,6 @@ class paginationView extends _viewJsDefault.default {
         this._parentElement.addEventListener("click", function(e) {
             const btn = e.target.closest(".page-btn");
             if (!btn) return;
-            console.log("PAGE BTN");
             const goTo = +btn.dataset.goto;
             console.log(goTo);
             handler(goTo);
@@ -842,21 +846,37 @@ class paginationView extends _viewJsDefault.default {
     _generateMarkup() {
         const results = this._data.search.results.length;
         const page = this._data.search.page;
-        console.log(page);
         // If there are more than one pages and on first page
         if (results === 10 && page === 1) return `
       <button data-goto="1" class="page-btn page-btn-next">
-      Page ${page + 1}</button>
+        Page ${page + 1}
+        <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round"  stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+      </button>
       `;
         // If there are more than 2 pages and on a middle page
         if (results === 10 && page > 1) return `
-      <button data-goto="-1" class="page-btn page-btn-prev">Page ${page - 1}</button>
-      <button data-goto="1" class="page-btn page-btn-next">Page ${page + 1}</button>
+      <button data-goto="-1" class="page-btn page-btn-prev">
+        <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon"   fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round"  stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+      Page ${page - 1}</button>
+      <button data-goto="1" class="page-btn page-btn-next">Page ${page + 1}
+        <svg xmlns="http://www.w3.org/2000/svg" class="arrow-icon"    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round"    stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+        </svg>
+        </button>
       
       `;
         // If there are more than one Pages and on LAST PAGE
         if (results <= 10 && page > 1) return `
-      <button data-goto="-1" class="page-btn page-btn-prev">Page ${page - 1}</button>
+      <button data-goto="-1" class="page-btn page-btn-prev">
+      <svg xmlns="http://www.w3.org/2000/svg" class="star-favorite-fill-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    </svg>
+        Page ${page - 1}
+      </button>
       `;
         // If there are is only 1 page
         if (results < 10 && page === 1) return "";

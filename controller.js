@@ -9,6 +9,9 @@ const controlSearchResults = async function () {
   try {
     // 1) Get Search Query
     const query = searchView.getQuery();
+    if (query !== model.state.search.query) {
+      model.state.search.page = 1;
+    }
 
     // 2) LOAD BREWERY LIST DATA
     await model.loadSearchResults(query);
