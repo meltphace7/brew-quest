@@ -1,0 +1,56 @@
+@media (max-width: 52em) {
+  body {
+    padding: 0rem;
+  }
+
+  .beer-icon {
+    height: 1rem;
+    width: 1rem;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .favorites-btn {
+    padding: 0.25rem;
+  }
+
+  .favorites-btn-text {
+    display: none;
+  }
+
+  .brew-search-field {
+    width: 8rem;
+  }
+
+  .find-brewery-btn {
+    width: 5rem;
+    font-size: 0.6rem;
+    padding: 0rem;
+  }
+
+  .brewery-link-title {
+    font-size: 0.8rem;
+  }
+
+  .brewery-link-town {
+    font-size: 0.8rem;
+  }
+
+  .brewery-feature-title {
+    font-size: 1rem;
+  }
+
+  .brewery-feature-location {
+    font-size: 1rem;
+  }
+
+  .brewery-feature-type {
+    font-size: 0.7rem;
+  }
+
+  .add-to-favorites {
+    font-size: 0.5rem;
+  }
+}

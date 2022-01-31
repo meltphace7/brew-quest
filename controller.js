@@ -66,3 +66,11 @@ const init = function () {
 
 init();
 console.log(model.state);
+
+const favoritesList = document.querySelector(".favorites-list");
+const favoritesBtn = document.querySelector(".favorites-btn");
+
+// favoritesBtn.addEventListener("click", function (e) {
+//   e.preventDefault();
+//   const clicked = e.target.closest()
+// });
